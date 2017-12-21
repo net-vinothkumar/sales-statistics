@@ -33,7 +33,7 @@ public class SalesOrderControllerTest {
     @Test
     public void ShouldAcceptValidSalesOrderRequest() throws Exception {
         //Given
-        SalesOrder salesOrder = new SalesOrder(50.0);
+        SalesOrder salesOrder = new SalesOrder(50.0, 1513855109000l);
         doNothing().when(salesStatisticsService).recordSalesOrder(salesOrder);
 
         //When
@@ -46,12 +46,20 @@ public class SalesOrderControllerTest {
         verify(salesStatisticsService).recordSalesOrder(any());
     }
 
-    @Test
-    public void ShouldThrowException_forAnInvalidSalesOrderRequest(){
-
+    //TODO improve the test case
+    @Test(expected = Exception.class)
+    public void ShouldThrowExceptionForAnEmptySalesAmount() throws Exception {
 
         //When
-        mvc.perform(post("/sales").param("sales_amount", "invalid_sales_amount"))
-                
+        mvc.perform(post("/sales").param("sales_amount", "")
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED));
+    }
+
+    @Test(expected = Exception.class)
+    public void ShouldThrowExceptionForAnInvalidSalesAmount() throws Exception {
+
+        //When
+        mvc.perform(post("/sales").param("sales_amount", "invalid_sales_amount")
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED));
     }
 }
