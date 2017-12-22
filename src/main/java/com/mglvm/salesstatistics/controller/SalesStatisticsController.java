@@ -22,12 +22,11 @@ public class SalesStatisticsController {
 
     @GetMapping(value = "/statistics")
     public SalesStatisticsDTO getSalesStatistics() {
-        SalesStatisticsDTO salesStatisticsDTO = new SalesStatisticsDTO("0.00", "0.00");
 
         SalesStatistics salesStatistics = salesStatisticsService.getSalesStatistics();
 
-        salesStatisticsDTO.setTotalSalesAmount(format(DOUBLE_WITH_TWO_DECIMAL_POINTS, salesStatistics.getTotalSalesAmount()));
-        salesStatisticsDTO.setAverageAmountPerOrder(format(DOUBLE_WITH_TWO_DECIMAL_POINTS, salesStatistics.getAverageAmountPerOrder()));
+        SalesStatisticsDTO salesStatisticsDTO = new SalesStatisticsDTO(format(DOUBLE_WITH_TWO_DECIMAL_POINTS, salesStatistics.getTotalSalesAmount()),
+                                                                       format(DOUBLE_WITH_TWO_DECIMAL_POINTS, salesStatistics.getAverageAmountPerOrder()));
 
         return salesStatisticsDTO;
     }

@@ -46,20 +46,24 @@ public class SalesOrderControllerTest {
         verify(salesStatisticsService).recordSalesOrder(any());
     }
 
-    //TODO improve the test case
-    @Test(expected = Exception.class)
+    @Test
     public void ShouldThrowExceptionForAnEmptySalesAmount() throws Exception {
 
         //When
         mvc.perform(post("/sales").param("sales_amount", "")
-                .contentType(MediaType.APPLICATION_FORM_URLENCODED));
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED))
+                .andExpect(status().isBadRequest())
+                .andExpect(content().string("{\"errorCode\":400,\"errorMessage\":\"java.lang.NumberFormatException: empty String\"}"));
     }
 
-    @Test(expected = Exception.class)
+    @Test
     public void ShouldThrowExceptionForAnInvalidSalesAmount() throws Exception {
 
         //When
         mvc.perform(post("/sales").param("sales_amount", "invalid_sales_amount")
-                .contentType(MediaType.APPLICATION_FORM_URLENCODED));
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED))
+                .andExpect(status().isBadRequest())
+                .andExpect(content().string("{\"errorCode\":400,\"errorMessage\":\"java.lang.NumberFormatException: For input string: \\\"invalid_sales_amount\\\"\"}"));
+
     }
 }

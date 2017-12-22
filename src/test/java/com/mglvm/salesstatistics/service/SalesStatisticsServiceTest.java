@@ -11,6 +11,9 @@ import org.mockito.runners.MockitoJUnitRunner;
 import java.time.Instant;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.stream.IntStream;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -28,7 +31,9 @@ public class SalesStatisticsServiceTest {
         //When
         salesStatisticsService.recordSalesOrder(salesOrder);
 
-        //TODO verify - what it is testing ?
+        //Then
+        assertThat(salesStatisticsService.getSalesStatistics().getTotalSalesAmount()).isEqualTo(100);
+        assertThat(salesStatisticsService.getSalesStatistics().getAverageAmountPerOrder()).isEqualTo(100);
 
     }
 
@@ -74,7 +79,7 @@ public class SalesStatisticsServiceTest {
         assertThat(salesStatistics.getAverageAmountPerOrder()).isEqualTo(150.00);
 
         //When
-        mockNoSalesForLastSeventySeconds();
+        mockNoSalesForSometime();
         long salesOrderTimpeStamp = Instant.now().getEpochSecond() * 1000;
         salesStatisticsService.recordSalesOrder(new SalesOrder(100.00, salesOrderTimpeStamp));
         salesStatistics = salesStatisticsService.getSalesStatistics();
@@ -84,7 +89,7 @@ public class SalesStatisticsServiceTest {
         assertThat(salesStatistics.getAverageAmountPerOrder()).isEqualTo(100.00);
     }
 
-    private void mockNoSalesForLastSeventySeconds() throws InterruptedException {
+    private void mockNoSalesForSometime() throws InterruptedException {
         Thread.sleep(70000);
     }
 }
