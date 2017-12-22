@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.Instant;
 import java.util.concurrent.ConcurrentSkipListSet;
+import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
 @Service
@@ -15,7 +16,7 @@ public class SalesStatisticsService {
     private static volatile ConcurrentSkipListSet<SalesOrder> salesOrdersList;
     private static volatile SalesStatistics salesStatistics;
     private static volatile long latesSalesOrderTimestamp;
-    private final ReentrantLock lock = new ReentrantLock(true);
+    private final Lock lock = new ReentrantLock(true);
 
     public SalesStatisticsService() {
         salesOrdersList = new ConcurrentSkipListSet<>();
@@ -32,6 +33,7 @@ public class SalesStatisticsService {
      */
     @Async
     public void recordSalesOrder(SalesOrder salesOrderInput) {
+
         clearOldSalesOrders();
 
         if (salesOrderInput.getTimestamp() >= getLastOneMinute()) {

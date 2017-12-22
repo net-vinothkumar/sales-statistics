@@ -21,7 +21,6 @@ public class SalesOrderController {
     }
 
     @PostMapping(value = "/sales", consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
-    @ResponseBody
     public void recordSalesOrder(@RequestParam(name = "sales_amount", required = true) String salesAmount, HttpServletResponse response) {
         SalesOrder salesOrder = new SalesOrder(convertSalesAmount(salesAmount), getSalesOrderEventTimestamp());
         salesStatisticsService.recordSalesOrder(salesOrder);

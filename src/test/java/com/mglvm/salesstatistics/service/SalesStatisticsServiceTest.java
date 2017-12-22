@@ -34,7 +34,6 @@ public class SalesStatisticsServiceTest {
         //Then
         assertThat(salesStatisticsService.getSalesStatistics().getTotalSalesAmount()).isEqualTo(100);
         assertThat(salesStatisticsService.getSalesStatistics().getAverageAmountPerOrder()).isEqualTo(100);
-
     }
 
     @Test

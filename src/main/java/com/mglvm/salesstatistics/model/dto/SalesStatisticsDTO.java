@@ -14,6 +14,11 @@ public final class SalesStatisticsDTO {
     @JsonProperty(value = "average_amount_per_order")
     private final String averageAmountPerOrder;
 
+    public SalesStatisticsDTO() {
+        this.totalSalesAmount = "0.00";
+        this.averageAmountPerOrder = "0.00";
+    }
+
     public SalesStatisticsDTO(String totalSalesAmount, String averageAmountPerOrder) {
         this.totalSalesAmount = totalSalesAmount;
         this.averageAmountPerOrder = averageAmountPerOrder;
