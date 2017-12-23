@@ -5,10 +5,13 @@ import com.mglvm.salesstatistics.service.SalesStatisticsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletResponse;
-import java.time.Instant;
+
+import static com.mglvm.salesstatistics.util.TimeUtil.getCurrentTime;
 
 @RestController
 public class SalesOrderController {
@@ -28,7 +31,7 @@ public class SalesOrderController {
     }
 
     private long getSalesOrderEventTimestamp() {
-        return Instant.now().getEpochSecond() * 1000;
+        return getCurrentTime();
     }
 
     private Double convertSalesAmount(String salesAmount) {
