@@ -1,5 +1,7 @@
 package com.mglvm.salesstatistics.model.dto;
-
+/**
+ * Created by Vinoth Kumar on 21/12/2017.
+ */
 public final class SalesStatistics {
 
     private Double totalSalesAmount;

@@ -2,7 +2,9 @@ package com.mglvm.salesstatistics.model.dto;
 
 import java.util.Comparator;
 import java.util.concurrent.atomic.AtomicLong;
-
+/**
+ * Created by Vinoth Kumar on 21/12/2017.
+ */
 public final class SalesOrder implements Comparable<SalesOrder> , Comparator<SalesOrder> {
 
     final static AtomicLong NEXT_ID = new AtomicLong(1);

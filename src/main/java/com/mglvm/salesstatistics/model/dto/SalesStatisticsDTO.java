@@ -3,7 +3,9 @@ package com.mglvm.salesstatistics.model.dto;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
-
+/**
+ * Created by Vinoth Kumar on 21/12/2017.
+ */
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({"total_sales_amount", "average_amount_per_order"})
 public final class SalesStatisticsDTO {

@@ -8,9 +8,14 @@ import org.springframework.stereotype.Service;
 import java.util.concurrent.ConcurrentSkipListSet;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
+import java.util.function.Consumer;
 
 import static com.mglvm.salesstatistics.util.TimeUtil.getCurrentTime;
 
+/**
+ * Created by Vinoth Kumar on 21/12/2017.
+ * Record the sales order and update the sales statistics.
+ */
 @Service
 public class SalesStatisticsService {
 
@@ -32,48 +37,43 @@ public class SalesStatisticsService {
      * 2.Reduce the amount of removed old sales order from total amount,calculate average amount per order
      * 3.Add the new sales order
      * 4.Add the sales order amount to total amount,calculate average amount per order
-     * @param salesOrderInput
+     *
+     * @param newSalesOrder
      */
     @Async
-    public void recordSalesOrder(SalesOrder salesOrderInput) {
+    public void recordSalesOrder(SalesOrder newSalesOrder) {
 
         clearOldSalesOrders();
 
-        if (salesOrderInput.getTimestamp() >= getLastOneMinute()) {
-            salesOrdersList.add(salesOrderInput);
-            latesSalesOrderTimestamp = salesOrderInput.getTimestamp();
-            addNewSalesOrderToSalesStatistics(salesOrderInput);
-        }
-    }
+        if (newSalesOrder.getTimestamp() >= getLastOneMinute()) {
+            salesOrdersList.add(newSalesOrder);
+            latesSalesOrderTimestamp = newSalesOrder.getTimestamp();
 
-    private void addNewSalesOrderToSalesStatistics(SalesOrder salesOrderInput) {
-        lock.lock();
-        try {
-            Double totalSalesAmount = salesStatistics.getTotalSalesAmount() + salesOrderInput.getAmount();
-            Double averageAmountPerOrder = totalSalesAmount / salesOrdersList.size();
-
-            salesStatistics.setTotalSalesAmount(totalSalesAmount);
-            salesStatistics.setAverageAmountPerOrder(averageAmountPerOrder);
-        } finally {
-            lock.unlock();
+            updateSalesStatisticsAtomically(newSalesOrder, salesOrderInput -> {
+                salesStatistics.setTotalSalesAmount(salesStatistics.getTotalSalesAmount() + salesOrderInput.getAmount());
+                salesStatistics.setAverageAmountPerOrder(salesStatistics.getTotalSalesAmount() / salesOrdersList.size());
+            });
         }
     }
 
     private void clearOldSalesOrders() {
         salesOrdersList.stream()
                 .filter(salesOrder -> salesOrder.getTimestamp() < getLastOneMinute())
-                .forEach(oldSalesOrder -> {
-                            salesOrdersList.remove(oldSalesOrder);
-                            removeOldSalesOrderFromSalesStatistics(oldSalesOrder);
+                .forEach(filteredOldSalesOrder -> {
+                            salesOrdersList.remove(filteredOldSalesOrder);
+
+                            updateSalesStatisticsAtomically(filteredOldSalesOrder, salesOrderInput -> {
+                                salesStatistics.setTotalSalesAmount(salesStatistics.getTotalSalesAmount() - salesOrderInput.getAmount());
+                                salesStatistics.setAverageAmountPerOrder(salesStatistics.getTotalSalesAmount() / salesOrdersList.size());
+                            });
                         }
                 );
     }
 
-    private void removeOldSalesOrderFromSalesStatistics(SalesOrder recentSalesOrder) {
+    private void updateSalesStatisticsAtomically(SalesOrder salesOrder, Consumer<SalesOrder> consumer) {
         lock.lock();
         try {
-            salesStatistics.setTotalSalesAmount(salesStatistics.getTotalSalesAmount() - recentSalesOrder.getAmount());
-            salesStatistics.setAverageAmountPerOrder(salesStatistics.getTotalSalesAmount() / salesOrdersList.size());
+            consumer.accept(salesOrder);
         } finally {
             lock.unlock();
         }
@@ -91,6 +91,6 @@ public class SalesStatisticsService {
     }
 
     private long getLastOneMinute() {
-        return getCurrentTime() - LAST_ONE_MINUTE ;
+        return getCurrentTime() - LAST_ONE_MINUTE;
     }
 }

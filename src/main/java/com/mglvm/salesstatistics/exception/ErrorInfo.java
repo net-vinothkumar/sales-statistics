@@ -1,5 +1,7 @@
 package com.mglvm.salesstatistics.exception;
-
+/**
+ * Created by Vinoth Kumar on 21/12/2017.
+ */
 public class ErrorInfo {
     private int errorCode;
     private String errorMessage;

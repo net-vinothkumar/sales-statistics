@@ -8,7 +8,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import static java.lang.String.format;
-
+/**
+ * Created by Vinoth Kumar on 21/12/2017.
+ */
 @RestController
 public class SalesStatisticsController {
     private static final String DOUBLE_WITH_TWO_DECIMAL_POINTS = "%.2f";

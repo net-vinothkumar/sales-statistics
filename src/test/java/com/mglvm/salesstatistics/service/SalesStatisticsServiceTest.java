@@ -64,31 +64,21 @@ public class SalesStatisticsServiceTest {
     public void ShouldGetTheSalesStatisticsForLastOneMinuteWhenThereAreOldSalesOrder() throws InterruptedException {
 
         //Given
+        long TWO_MINUTE_DELAY = 120000;
         SalesStatisticsService salesStatisticsService = new SalesStatisticsService();
-        long salesOrderTimpeStamp_1 = Instant.now().getEpochSecond() * 1000;
-        long salesOrderTimpeStamp_2 = Instant.now().getEpochSecond() * 1000;
+        long salesOrderTimpeStamp_1 = Instant.now().getEpochSecond() * 1000 - TWO_MINUTE_DELAY;
+        long salesOrderTimpeStamp_2 = Instant.now().getEpochSecond() * 1000 - TWO_MINUTE_DELAY;
 
         List<SalesOrder> mockSalesOrderList = Arrays.asList(new SalesOrder(100.00, salesOrderTimpeStamp_1),
                 new SalesOrder(200.00, salesOrderTimpeStamp_2));
 
         mockSalesOrderList.forEach(salesOrder -> salesStatisticsService.recordSalesOrder(salesOrder));
-        SalesStatistics salesStatistics = salesStatisticsService.getSalesStatistics();
-
-        assertThat(salesStatistics.getTotalSalesAmount()).isEqualTo(300.00);
-        assertThat(salesStatistics.getAverageAmountPerOrder()).isEqualTo(150.00);
 
         //When
-        mockNoSalesForSometime();
-        long salesOrderTimpeStamp = Instant.now().getEpochSecond() * 1000;
-        salesStatisticsService.recordSalesOrder(new SalesOrder(100.00, salesOrderTimpeStamp));
-        salesStatistics = salesStatisticsService.getSalesStatistics();
+        SalesStatistics salesStatistics = salesStatisticsService.getSalesStatistics();
 
         //Then
-        assertThat(salesStatistics.getTotalSalesAmount()).isEqualTo(100.00);
-        assertThat(salesStatistics.getAverageAmountPerOrder()).isEqualTo(100.00);
-    }
-
-    private void mockNoSalesForSometime() throws InterruptedException {
-        Thread.sleep(70000);
+        assertThat(salesStatistics.getTotalSalesAmount()).isEqualTo(0.00);
+        assertThat(salesStatistics.getAverageAmountPerOrder()).isEqualTo(0.00);
     }
 }

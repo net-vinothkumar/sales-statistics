@@ -1,0 +1,152 @@
+{
+	"id": "d3c85b74-70d0-8fe7-4ad0-a0f387b4889d",
+	"name": "mglvm",
+	"description": "",
+	"order": [
+		"1b6a1165-9075-acbd-db77-81d4c85347c1",
+		"ed2928b2-0cc1-dd89-e6c7-cecc85696863",
+		"068539bc-2ff2-e24d-350d-f8051a89dbf8",
+		"269cfa66-9626-a2b7-4e0b-884695f5c94f"
+	],
+	"folders": [],
+	"folders_order": [],
+	"timestamp": 1514090373632,
+	"owner": 0,
+	"public": false,
+	"requests": [
+		{
+			"id": "068539bc-2ff2-e24d-350d-f8051a89dbf8",
+			"headers": "Content-Type: application/x-www-form-urlencoded\nAccept: application/json\n",
+			"headerData": [
+				{
+					"key": "Content-Type",
+					"value": "application/x-www-form-urlencoded",
+					"description": "",
+					"enabled": true
+				},
+				{
+					"key": "Accept",
+					"value": "application/json",
+					"description": "",
+					"enabled": true
+				}
+			],
+			"url": "http://localhost:8080/sales?sales_amount=200",
+			"queryParams": [
+				{
+					"key": "sales_amount",
+					"value": "200",
+					"equals": true,
+					"description": "",
+					"enabled": true
+				}
+			],
+			"preRequestScript": null,
+			"pathVariables": {},
+			"pathVariableData": [],
+			"method": "POST",
+			"data": [],
+			"dataMode": "raw",
+			"version": 2,
+			"tests": null,
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"time": 1514094359250,
+			"name": "http://localhost:8080/sales?sales_amount=1",
+			"description": "record sales statistics",
+			"collectionId": "d3c85b74-70d0-8fe7-4ad0-a0f387b4889d",
+			"responses": [],
+			"rawModeData": ""
+		},
+		{
+			"id": "1b6a1165-9075-acbd-db77-81d4c85347c1",
+			"headers": "",
+			"headerData": [],
+			"url": "https://sales-statistics-cloud-app.cfapps.io/statistics",
+			"queryParams": [],
+			"pathVariables": {},
+			"pathVariableData": [],
+			"preRequestScript": null,
+			"method": "GET",
+			"collectionId": "d3c85b74-70d0-8fe7-4ad0-a0f387b4889d",
+			"data": null,
+			"dataMode": "params",
+			"name": "https://sales-statistics-cloud-app.cfapps.io/statistics",
+			"description": "get sales statistics",
+			"descriptionFormat": "html",
+			"time": 1514090384177,
+			"version": 2,
+			"responses": [],
+			"tests": null,
+			"currentHelper": "normal",
+			"helperAttributes": {}
+		},
+		{
+			"id": "269cfa66-9626-a2b7-4e0b-884695f5c94f",
+			"headers": "",
+			"headerData": [],
+			"url": "http://localhost:8080/statistics",
+			"queryParams": [],
+			"pathVariables": {},
+			"pathVariableData": [],
+			"preRequestScript": null,
+			"method": "GET",
+			"collectionId": "d3c85b74-70d0-8fe7-4ad0-a0f387b4889d",
+			"data": null,
+			"dataMode": "params",
+			"name": "http://localhost:8080/statistics",
+			"description": "get sales statistics",
+			"descriptionFormat": "html",
+			"time": 1514090474923,
+			"version": 2,
+			"responses": [],
+			"tests": null,
+			"currentHelper": "normal",
+			"helperAttributes": {}
+		},
+		{
+			"id": "ed2928b2-0cc1-dd89-e6c7-cecc85696863",
+			"headers": "Content-Type: application/x-www-form-urlencoded\nAccept: application/json\n",
+			"headerData": [
+				{
+					"key": "Content-Type",
+					"value": "application/x-www-form-urlencoded",
+					"description": "",
+					"enabled": true
+				},
+				{
+					"key": "Accept",
+					"value": "application/json",
+					"description": "",
+					"enabled": true
+				}
+			],
+			"url": "https://sales-statistics-cloud-app.cfapps.io/sales?sales_amount=100",
+			"queryParams": [
+				{
+					"key": "sales_amount",
+					"value": "100",
+					"equals": true,
+					"description": "",
+					"enabled": true
+				}
+			],
+			"preRequestScript": null,
+			"pathVariables": {},
+			"pathVariableData": [],
+			"method": "POST",
+			"data": [],
+			"dataMode": "raw",
+			"version": 2,
+			"tests": null,
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"time": 1514094355547,
+			"name": "https://sales-statistics-cloud-app.cfapps.io/sales?sales_amount=100",
+			"description": "record sales statistics",
+			"collectionId": "d3c85b74-70d0-8fe7-4ad0-a0f387b4889d",
+			"responses": [],
+			"rawModeData": ""
+		}
+	]
+}
