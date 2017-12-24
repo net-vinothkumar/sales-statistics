@@ -8,7 +8,6 @@ import org.springframework.stereotype.Service;
 import java.util.concurrent.ConcurrentSkipListSet;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
-import java.util.function.Consumer;
 
 import static com.mglvm.salesstatistics.util.TimeUtil.getCurrentTime;
 
@@ -48,12 +47,13 @@ public class SalesStatisticsService {
         if (newSalesOrder.getTimestamp() >= getLastOneMinute()) {
             salesOrdersList.add(newSalesOrder);
             latesSalesOrderTimestamp = newSalesOrder.getTimestamp();
-
-            updateSalesStatisticsAtomically(newSalesOrder, salesOrderInput -> {
-                salesStatistics.setTotalSalesAmount(salesStatistics.getTotalSalesAmount() + salesOrderInput.getAmount());
-                salesStatistics.setAverageAmountPerOrder(salesStatistics.getTotalSalesAmount() / salesOrdersList.size());
-            });
+            modifySalesStatisticsAtomically(newSalesOrder, this::addNewSalesOrderToSalesStatistics);
         }
+    }
+
+    private void addNewSalesOrderToSalesStatistics(SalesOrder newSalesOrder) {
+        salesStatistics.setTotalSalesAmount(salesStatistics.getTotalSalesAmount() + newSalesOrder.getAmount());
+        salesStatistics.setAverageAmountPerOrder(salesStatistics.getTotalSalesAmount() / salesOrdersList.size());
     }
 
     private void clearOldSalesOrders() {
@@ -61,16 +61,17 @@ public class SalesStatisticsService {
                 .filter(salesOrder -> salesOrder.getTimestamp() < getLastOneMinute())
                 .forEach(filteredOldSalesOrder -> {
                             salesOrdersList.remove(filteredOldSalesOrder);
-
-                            updateSalesStatisticsAtomically(filteredOldSalesOrder, salesOrderInput -> {
-                                salesStatistics.setTotalSalesAmount(salesStatistics.getTotalSalesAmount() - salesOrderInput.getAmount());
-                                salesStatistics.setAverageAmountPerOrder(salesStatistics.getTotalSalesAmount() / salesOrdersList.size());
-                            });
+                            modifySalesStatisticsAtomically(filteredOldSalesOrder, this::removeOldSalesOrderFromSalesStatistics);
                         }
                 );
     }
 
-    private void updateSalesStatisticsAtomically(SalesOrder salesOrder, SalesStatisticsModifier<SalesOrder> modifier) {
+    private void removeOldSalesOrderFromSalesStatistics(SalesOrder oldSalesOrder) {
+        salesStatistics.setTotalSalesAmount(salesStatistics.getTotalSalesAmount() - oldSalesOrder.getAmount());
+        salesStatistics.setAverageAmountPerOrder(salesStatistics.getTotalSalesAmount() / salesOrdersList.size());
+    }
+
+    private void modifySalesStatisticsAtomically(SalesOrder salesOrder, SalesStatisticsModifier<SalesOrder> modifier) {
         lock.lock();
         try {
             modifier.modifySalesStatistics(salesOrder);
