@@ -70,10 +70,10 @@ public class SalesStatisticsService {
                 );
     }
 
-    private void updateSalesStatisticsAtomically(SalesOrder salesOrder, Consumer<SalesOrder> consumer) {
+    private void updateSalesStatisticsAtomically(SalesOrder salesOrder, SalesStatisticsModifier<SalesOrder> modifier) {
         lock.lock();
         try {
-            consumer.accept(salesOrder);
+            modifier.modifySalesStatistics(salesOrder);
         } finally {
             lock.unlock();
         }
@@ -93,4 +93,5 @@ public class SalesStatisticsService {
     private long getLastOneMinute() {
         return getCurrentTime() - LAST_ONE_MINUTE;
     }
+
 }
