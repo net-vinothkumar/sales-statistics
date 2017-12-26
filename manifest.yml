@@ -1,6 +1,0 @@
----
-applications:
-- name: sales-statistics-cloud
-  instances: 1
-  host: sales-statistics-cloud-app
-  path: target/sales-statistics-0.0.1-SNAPSHOT.jar
